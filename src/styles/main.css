@@ -1,0 +1,151 @@
+/* Base styling */
+*,*::before,*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: #fff;
+  overflow-x: hidden;
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- layout ---------- */
+main {
+  flex: 1;
+  display: flex;
+  gap: 2rem;
+  padding-top: 20vh;
+  width: 100%;
+}
+
+#sketch-holder {
+  flex: 0 0 50%;
+  display: flex;
+  justify-content: center;
+}
+
+#traits {
+  flex: 0 0 50%;
+  display: flex;
+  justify-content: center;
+}
+
+#traits > div {
+  max-width: 280px;
+  width: 100%;
+}
+
+canvas {
+  display: block;
+}
+
+/* ---------- traits ---------- */
+#traits {
+  min-width: 220px;
+  font-size: .875rem;
+  line-height: 1.45;
+}
+
+#traits h2 {
+  font-size: 1rem;
+  margin: .25rem 0 .75rem;
+  font-weight: 600;
+}
+
+.address-input {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.address-input input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+.address-input input:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.address-input button {
+  padding: 0.5rem 1rem;
+}
+
+#traits ul,
+#algorithm-info ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#traits li,
+#algorithm-info li {
+  margin: .3rem 0;
+  border-bottom: 1px solid #eee;
+  padding-bottom: .3rem;
+}
+
+#traits span,
+#algorithm-info span {
+  font-weight: 600;
+}
+
+#algorithm-info {
+  margin-top: 3rem;
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+}
+
+#algorithm-info h2 {
+  font-size: 1rem;
+  margin: 0 0 .75rem;
+  font-weight: 600;
+}
+
+button {
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+  padding: .55rem 3rem;
+  font-size: .875rem;
+  cursor: pointer;
+  letter-spacing: .03em;
+  transition: .2s;
+}
+
+button:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+    padding-top: 10vh;
+  }
+  
+  #sketch-holder,
+  #traits {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  
+  #traits > div {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  
+  #controls {
+    height: 15vh;
+  }
+}
