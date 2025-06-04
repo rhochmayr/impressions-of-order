@@ -4,6 +4,7 @@ import { setupCanvas } from './components/canvas.js';
 import { updateTraits } from './components/traits.js';
 import { updateAlgorithmInfo } from './components/algorithmInfo.js';
 import { validateAddress, generateHashFromAddress, generateRandomAddress } from './utils/ethereum.js';
+import { initializeRouter, generateFromAddress } from './utils/router.js';
 
 // Initialize the fxrand functions
 initFxRand();
@@ -12,18 +13,11 @@ initFxRand();
 function setupAddressInput() {
   const addressInput = document.getElementById('eth-address');
   const randomButton = document.getElementById('random-address');
-
   // Handle address input
   addressInput.addEventListener('input', (e) => {
     const address = e.target.value;
     if (validateAddress(address)) {
-      const hash = generateHashFromAddress(address);
-      if (hash) {
-        window.fxhash = hash;
-        window.initialSeed = parseInt(hash.slice(0, 16), 16);
-        window.setFxSeed(window.initialSeed);
-        regen();
-      }
+      generateFromAddress(address);
     }
   });
 
@@ -31,13 +25,7 @@ function setupAddressInput() {
   randomButton.addEventListener('click', () => {
     const address = generateRandomAddress();
     addressInput.value = address;
-    const hash = generateHashFromAddress(address);
-    if (hash) {
-      window.fxhash = hash;
-      window.initialSeed = parseInt(hash.slice(0, 16), 16);
-      window.setFxSeed(window.initialSeed);
-      regen();
-    }
+    generateFromAddress(address);
   });
 }
 
@@ -49,6 +37,24 @@ window.regen = function() {
   
   // Initialize background color with a valid default value
   window.bkc = '#FFFFFF';
+  
+  // Clear any potential p5.js state
+  if (typeof sh !== 'undefined') {
+    if (sh.resetMatrix) sh.resetMatrix();
+    if (sh.clear) sh.clear();
+    if (sh.background) sh.background(255);
+  }
+  
+  // Reset graphics buffer if it exists
+  if (typeof pg !== 'undefined') {
+    if (pg.resetMatrix) pg.resetMatrix();
+    if (pg.clear) pg.clear();
+    if (pg.background) pg.background(255);
+  }
+  
+  // Reset any global drawing state
+  if (typeof resetShader === 'function') resetShader();
+  if (typeof resetDrawingState === 'function') resetDrawingState();
   
   // Call the external script functions if they exist
   if (typeof setRandom === 'function') setRandom();
@@ -104,21 +110,18 @@ async function initApp() {
     // Set up the canvas once p5.js is loaded
     await setupCanvas();
     
+    // Initialize router (this will check URL and load address if present)
+    initializeRouter();
+    
     // Set up address input handling
     setupAddressInput();
     
-    // Generate a random address for initial artwork
-    const randomAddress = generateRandomAddress();
+    // Only generate random address if no URL address was loaded
     const addressInput = document.getElementById('eth-address');
-    if (addressInput) {
+    if (addressInput && !addressInput.value) {
+      const randomAddress = generateRandomAddress();
       addressInput.value = randomAddress;
-      const hash = generateHashFromAddress(randomAddress);
-      if (hash) {
-        window.fxhash = hash;
-        window.initialSeed = parseInt(hash.slice(0, 16), 16);
-        window.setFxSeed(window.initialSeed);
-        regen();
-      }
+      generateFromAddress(randomAddress);
     }
     
     // Add window resize event listener

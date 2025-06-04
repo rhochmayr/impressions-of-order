@@ -46,6 +46,8 @@ function getSuperSize(){return ft.superSize>.12&&ft.superSize<.13}
 
 function setRandom(){
   randomSeed(window.initialSeed);
+  // Also reset fxrand to the same seed for consistency
+  window.setFxSeed(window.initialSeed);  
 }
 
 function getCom(){return ft.agentNum<.03&&ft.agentNum>.01&&4==ft.rot?8:ft.agentNum<.07&&ft.agentNum>.01&&4==ft.rot?60:ft.agentNum<.8&&ft.agentNum>.01&&4==ft.rot?30:40}

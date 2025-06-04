@@ -17,11 +17,6 @@ export function generateHashFromAddress(address) {
     const hash = keccak256(toUtf8Bytes(normalizedAddress));
     const finalHash = hash.slice(2);
     
-    // Create a deterministic seed from the hash
-    const seed = parseInt(finalHash.slice(0, 16), 16);
-    window.initialSeed = seed;
-    window.setFxSeed(seed);
-    
     return finalHash;
   } catch (e) {
     console.error('Error generating hash:', e);
