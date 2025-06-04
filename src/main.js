@@ -9,6 +9,55 @@ import { initializeRouter, generateFromAddress } from './utils/router.js';
 // Initialize the fxrand functions
 initFxRand();
 
+// Add this function to reset all global state
+window.resetGlobalState = function() {
+  // Reset any global variables that might affect generation
+  
+  // Common variables that might accumulate state:
+  if (typeof window.frameCount !== 'undefined') window.frameCount = 0;
+  if (typeof window.generationCount !== 'undefined') window.generationCount = 0;
+  if (typeof window.colorPalette !== 'undefined') window.colorPalette = null;
+  if (typeof window.currentFeatures !== 'undefined') window.currentFeatures = null;
+  
+  // Reset specific external script global variables
+  if (typeof agents !== 'undefined') {
+    agents = [];
+    console.log('Reset agents array');
+  }
+  if (typeof acc !== 'undefined') {
+    acc = [];
+    console.log('Reset acc array');
+  }
+  if (typeof ft !== 'undefined') {
+    ft = {};
+    console.log('Reset ft object');
+  }
+  if (typeof numAgents !== 'undefined') {
+    numAgents = 0;
+    console.log('Reset numAgents');
+  }
+  if (typeof snapshot !== 'undefined') {
+    snapshot = false;
+    console.log('Reset snapshot flag');
+  }
+  
+  // Reset p5.js random seed to ensure clean state
+  if (typeof randomSeed === 'function' && typeof window.initialSeed !== 'undefined') {
+    randomSeed(window.initialSeed);
+  }
+  
+  // Reset noise seed if using noise functions
+  if (typeof noiseSeed === 'function' && typeof window.initialSeed !== 'undefined') {
+    noiseSeed(window.initialSeed);
+  }
+  
+  // Reset any arrays or objects that might accumulate state
+  if (typeof window.trails !== 'undefined') window.trails = [];
+  if (typeof window.particles !== 'undefined') window.particles = [];
+  
+  console.log('Global state reset completed');
+};
+
 // Set up address input handling
 function setupAddressInput() {
   const addressInput = document.getElementById('eth-address');
@@ -31,6 +80,20 @@ function setupAddressInput() {
 
 // Function to regenerate the artwork
 window.regen = function() {
+  // Add debugging to see what state exists
+  console.log('Current state before reset:', {
+    fxhash: window.fxhash,
+    initialSeed: window.initialSeed,
+    bkc: window.bkc,
+    agents: typeof agents !== 'undefined' ? agents.length : 'undefined',
+    ft: typeof ft !== 'undefined' ? Object.keys(ft).length : 'undefined'
+  });
+  
+  // IMPORTANT: Reset all global state FIRST
+  if (typeof window.resetGlobalState === 'function') {
+    window.resetGlobalState();
+  }
+  
   // Reset the random number generator with the initial seed
   window.setFxSeed(window.initialSeed);
   console.log('Regenerating with seed:', window.initialSeed);

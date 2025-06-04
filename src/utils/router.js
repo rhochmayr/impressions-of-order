@@ -63,7 +63,10 @@ export function generateFromAddress(address) {
   if (hash) {
     window.fxhash = hash;
     window.initialSeed = parseInt(hash.slice(0, 16), 16);
+    
+    // IMPORTANT: Set the seed BEFORE calling regen to ensure clean state
     window.setFxSeed(window.initialSeed);
+    console.log('Set initial seed for address generation:', window.initialSeed);
     
     // Call the enhanced regen function
     if (typeof window.regen === 'function') {
