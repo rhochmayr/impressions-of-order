@@ -6,6 +6,8 @@ A generative art project that creates unique abstract compositions based on Ethe
 
 Original work by: [@nbswwit](https://x.com/nbswwit)
 
+## Screenshot
+
 ## Features
 
 - **Address-Based Generation**: Enter any Ethereum address to generate unique artwork
