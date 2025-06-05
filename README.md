@@ -89,7 +89,3 @@ This ensures that each Ethereum address always produces the same unique artwork,
 │       └── main.css           # Main stylesheet
 └── index.html                 # Entry point
 ```
-
-## License
-
-MIT
