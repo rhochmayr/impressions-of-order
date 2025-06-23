@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/impressions-of-order/',
   server: {
     historyApiFallback: {
       rewrites: [
