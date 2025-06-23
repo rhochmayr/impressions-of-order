@@ -93,3 +93,20 @@ This ensures that each Ethereum address always produces the same unique artwork,
 │       └── main.css           # Main stylesheet
 └── index.html                 # Entry point
 ```
+
+## Determinism Limitations
+
+**Important Note on Seed Uniqueness**: While this implementation provides deterministic artwork generation for Ethereum addresses, there are theoretical limitations to consider:
+
+The current system converts Ethereum addresses to 32-bit integer seeds for compatibility with the existing `fxrand` Linear Congruential Generator (LCG) and p5.js's random number functions. This conversion process has the following constraints:
+
+- **Seed Space**: Only the first 16 characters of the address hash are used, creating a 64-bit hex value that's then converted to a 32-bit integer
+- **Collision Potential**: While extremely unlikely in practice, different Ethereum addresses could theoretically produce the same 32-bit seed due to this conversion
+- **JavaScript Number Precision**: The conversion relies on JavaScript's `Number` type, which has precision limitations for very large integers
+
+**Technical Background**: To achieve true uniqueness for every possible Ethereum address, the system would need:
+1. A BigInt-compatible PRNG that can handle the full 160-bit address space
+2. Complete replacement of p5.js's Number-based random functions with BigInt equivalents
+3. Extensive re-architecture of the random number generation throughout the rendering pipeline
+
+For practical purposes, the current implementation provides excellent determinism and uniqueness for real-world use cases, with collision probability being negligibly small.
