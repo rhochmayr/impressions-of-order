@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --base=/impressions-of-order/",
     "preview": "vite preview"
   },
   "devDependencies": {
