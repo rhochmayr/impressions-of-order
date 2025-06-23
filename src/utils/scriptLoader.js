@@ -37,7 +37,7 @@ function loadScriptSrc(src) {
   });
 }
 
-// Get the correct base path for GitHub Pages
+// Get the correct base path
 function getBasePath() {
   // Check if we're on GitHub Pages
   if (window.location.hostname.includes('github.io')) {
@@ -55,15 +55,14 @@ export function loadExternalScripts() {
   return new Promise((resolve, reject) => {
     const basePath = getBasePath();
     
-    // For production (GitHub Pages), use the built files
-    // For development, use the source files
-    const isProduction = window.location.hostname.includes('github.io');
-    
+    // Use public/utils/ for all environments - Vite will handle the paths correctly
     const scriptSources = [
-      `${basePath}/src/utils/trail.js`,
-      `${basePath}/src/utils/scanline.js`, 
-      `${basePath}/src/utils/run.js`
+      `${basePath}/utils/trail.js`,
+      `${basePath}/utils/scanline.js`, 
+      `${basePath}/utils/run.js`
     ];
+    
+    console.log('Loading scripts from:', scriptSources);
     
     // Load each script in sequence
     let chain = Promise.resolve();
