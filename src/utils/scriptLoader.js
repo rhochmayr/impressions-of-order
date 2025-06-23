@@ -37,25 +37,13 @@ function loadScriptSrc(src) {
   });
 }
 
-// Get the correct base path
-function getBasePath() {
-  // Check if we're on GitHub Pages
-  if (window.location.hostname.includes('github.io')) {
-    // Extract repo name from pathname for GitHub Pages
-    const pathParts = window.location.pathname.split('/').filter(part => part);
-    if (pathParts.length > 0) {
-      return `/${pathParts[0]}`;
-    }
-  }
-  return '';
-}
-
 // Load external scripts in sequence
 export function loadExternalScripts() {
   return new Promise((resolve, reject) => {
-    const basePath = getBasePath();
+    // Use Vite's built-in BASE_URL environment variable
+    const basePath = import.meta.env.BASE_URL.replace(/\/$/, ''); // Remove trailing slash
     
-    // Use public/utils/ for all environments - Vite will handle the paths correctly
+    // Load scripts from the utils directory
     const scriptSources = [
       `${basePath}/utils/trail.js`,
       `${basePath}/utils/scanline.js`, 

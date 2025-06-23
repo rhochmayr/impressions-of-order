@@ -1,6 +1,9 @@
 // Router utility for URL-based address handling
 import { validateAddress, generateHashFromAddress } from './ethereum.js';
 
+// Use Vite's built-in BASE_URL environment variable
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, ''); // Remove trailing slash
+
 export function initializeRouter() {
   // Check URL on page load
   handleRouteChange();
@@ -12,9 +15,12 @@ export function initializeRouter() {
 export function handleRouteChange() {
   const path = window.location.pathname;
   
-  // Check if path contains an Ethereum address
+  // Remove base path from the current path to get the relative path
+  const relativePath = basePath ? path.replace(basePath, '') : path;
+  
+  // Check if relative path contains an Ethereum address
   // Format: /0x... or just the address without leading slash
-  const addressMatch = path.match(/\/?(?:0x)?([a-fA-F0-9]{40})$/);
+  const addressMatch = relativePath.match(/\/?(?:0x)?([a-fA-F0-9]{40})$/);
   
   if (addressMatch) {
     const address = '0x' + addressMatch[1].toLowerCase();
@@ -39,7 +45,7 @@ export function handleRouteChange() {
 }
 
 export function updateURL(address) {
-  const newPath = `/${address}`;
+  const newPath = `${basePath}/${address}`;
   
   // Only update if the URL is different
   if (window.location.pathname !== newPath) {
