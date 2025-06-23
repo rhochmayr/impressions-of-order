@@ -3,7 +3,12 @@ function loadScript(url) {
   return new Promise((resolve, reject) => {
     try {
       fetch(url)
-        .then(response => response.text())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.text();
+        })
         .then(scriptContent => {
           const scriptElement = document.createElement('script');
           scriptElement.textContent = scriptContent;
@@ -32,14 +37,32 @@ function loadScriptSrc(src) {
   });
 }
 
+// Get the correct base path for GitHub Pages
+function getBasePath() {
+  // Check if we're on GitHub Pages
+  if (window.location.hostname.includes('github.io')) {
+    // Extract repo name from pathname for GitHub Pages
+    const pathParts = window.location.pathname.split('/').filter(part => part);
+    if (pathParts.length > 0) {
+      return `/${pathParts[0]}`;
+    }
+  }
+  return '';
+}
+
 // Load external scripts in sequence
 export function loadExternalScripts() {
   return new Promise((resolve, reject) => {
-    // First load the necessary scripts from gateway.fxhash2.xyz
+    const basePath = getBasePath();
+    
+    // For production (GitHub Pages), use the built files
+    // For development, use the source files
+    const isProduction = window.location.hostname.includes('github.io');
+    
     const scriptSources = [
-      '/src/utils/trail.js',
-      '/src/utils/scanline.js',
-      '/src/utils/run.js'
+      `${basePath}/src/utils/trail.js`,
+      `${basePath}/src/utils/scanline.js`, 
+      `${basePath}/src/utils/run.js`
     ];
     
     // Load each script in sequence
